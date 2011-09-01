@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title>#{get 'title' /}</title>
+
+	<link rel="stylesheet" href="@{'/public/stylesheets/reset.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/text.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/form.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/buttons.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/grid.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/layout.css'}" type="text/css" media="screen" title="no title" />
+
+	<link rel="stylesheet" href="@{'/public/stylesheets/ui-darkness/jquery-ui-1.8.12.custom.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/plugin/jquery.visualize.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/plugin/facebox.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/plugin/uniform.default.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/plugin/dataTables.css'}" type="text/css" media="screen" title="no title" />
+
+	<link rel="stylesheet" href="@{'/public/stylesheets/custom.css'}" type="text/css" media="screen" title="no title" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<body>
+
+<div id="wrapper">
+
+	<div id="top">
+
+		<div class="content_pad">
+			<ul class="right">
+				<li><a href="" class="top_icon"><span class="ui-icon ui-icon-person"></span>Identificado como Octavio Ruiz</a></li>
+				<li><a href="" class="new_messages top_alert">1 Alerta</a></li>
+				<li><a href="./settings.html">Configuración</a></li>
+				<li><a href="../index.html">${prueba}Salir</a></li>
+			</ul>
+		</div> <!-- .content_pad -->
+
+	</div> <!-- #top -->
+
+	<div id="header">
+
+		<div class="content_pad">
+			<h1><a href="../dashboard.html">Status Q</a></h1>
+
+			<ul id="nav">
+				<li class="%{out.print(tab=='Home'?'nav_current':'')}% nav_icon"><a href="@{Dashboard.overall()}"><span class="ui-icon ui-icon-home"></span>Inicio</a></li>
+
+                #{list items:sucursals, as:'sucursal'}
+				    <li class="%{out.print(tab==sucursal.nombre?'nav_current':'')}% nav_icon"><a href="@{Dashboard.show(sucursal.id)}"><span class="ui-icon ui-icon-signal"></span>${sucursal.nombre}</a></li>
+                #{/list}
+				<li class="nav_dropdown nav_icon_only">
+					<a href="">&nbsp;</a>
+
+					<div class="nav_menu">
+
+						<ul>
+							<li><a href="">Overflow Menu</a></li>
+							<li><a href="">Items Can</a></li>
+							<li><a href="">Go Here</a></li>
+						</ul>
+					</div> <!-- .menu -->
+				</li>
+			</ul>
+		</div> <!-- .content_pad -->
+
+	</div> <!-- #header -->
+
+	<div id="masthead">
+
+		<div class="content_pad">
+
+			<h1 class="">Valdéz</h1>
+
+			<div id="bread_crumbs">
+                <a href="@{Dashboard.show()}">Home</a>
+				<!-- / <a href="" class="current_page">Reports</a> -->
+				 <!--#{crud.navigation /}-->
+			 </div> <!-- #bread_crumbs -->
+
+			<div id="search">
+				<form action="http://madebyamp.com/search" method="get" />
+					<input type="text" value="" placeholder="Search" name="search" id="search_input" title="Search" />
+					<input type="submit" value="" name="submit" class="submit" />
+				</form>
+			</div> <!-- #search -->
+
+		</div> <!-- .content_pad -->
+
+	</div> <!-- #masthead -->
+
+    <div id="content">
+		        #{if flash.error}
+		            <div class="fError">
+		                <strong>${play.i18n.Messages.get(flash.error)}</strong>
+		            </div>
+		        #{/if}
+		        #{if flash.success}
+		            <div class="fSuccess">
+		                <strong>${play.i18n.Messages.get(flash.success)}</strong>
+		            </div>
+		        #{/if}
+
+		        #{doLayout /}
+    </div>
+
+	<div id="footer">
+		<div class="content_pad">
+			<p>&copy; 2010-11 Copyright <a href="http://madebyamp.com/">Plexus Labs. Phesus</a>. Powered by <a href="../index.html">Oracle Java</a>.</p>
+		</div> <!-- .content_pad -->
+	</div> <!-- #footer -->
+
+</div> <!-- #wrapper -->
+
+<script src="@{'/public/javascripts/jquery/jquery-1.5.2.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.12.custom.min.js'}"></script>
+<script src="@{'/public/javascripts/misc/excanvas.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/facebox.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery.visualize.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery.dataTables.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery.tablesorter.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery.uniform.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery.placeholder.min.js'}"></script>
+
+<script src="@{'/public/javascripts/widgets.js'}"></script>
+<script src="@{'/public/javascripts/dashboard.js'}"></script>
+
+<script>
+
+$(document).ready ( function ()
+{
+	Dashboard.init ();
+});
+
+</script>
+
+</body>
+</html>

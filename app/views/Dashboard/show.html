@@ -1,0 +1,87 @@
+#{extends 'main.html' /}
+
+
+
+    <div class="x12">
+
+		<div id="big_stats" class="clearfix">
+			<div class="stat">
+
+				<h4>Consultar producto</h4>
+
+                <form action="@{Productos.list()}" method="get" class="form label-inline uniform" />
+                    <!--<input id="fname" name="fname" size="20" style="font-size:18px" type="text" class="small" />-->
+                    <button class="btn btn-large">Consultar Productos</button>
+                    <!--<button class="btn btn-black">Todos</button>-->
+                </form>
+
+			</div>
+
+			<div class="stat">
+
+				<h4>Ventas de hoy</h4>
+				<span class="value">${ventaHoy.venta.format('#,##0.00')}</span>
+
+
+			</div>
+            <div class="stat">
+
+				<h4>Estado del sistema</h4>
+				<span class="value">${online?"En línea":"Desconectado"}</span>
+
+
+			</div>
+
+		</div>
+
+	</div> <!-- .x12 -->
+
+    <div class="xbreak"></div> <!-- .xbreak -->
+
+    <div class="x4">
+
+		<h2>Ésta semana</h2>
+
+		<table class="data info_table">
+				<tbody>
+                    #{list items:ventasSemana, as:'dia'}
+                    <tr>
+						<td class="value">${dia.venta.format('#,##0.00')}</td>
+						<td class="full">${dia.fecha.since()}</td>
+					</tr>
+                    #{/list}
+
+				</tbody>
+			</table>
+
+	</div>
+
+	<div class="x8">
+
+		<h2>Comparativa por mes</h2>
+
+		<table class="stats" data-chart="bar">
+					<caption>Ventas por mes</caption>
+					<thead>
+						<tr>
+							<td class="no_input">&nbsp;</td>
+							#{list items:meses, as:'mes'}
+                                <th>${mes.format('MMMM', 'es').capitalizeWords()}</th>
+							#{/list}
+						</tr>
+
+					</thead>
+
+					<tbody>
+                        #{list items:anios, as:'anio'}
+                            <tr>
+                                <th>${anio.format('yyyy')}</th>
+                                #{list items:meses, as:'mes'}
+                                    <td>${ventaPorMes[anio.format('yyyy')+mes.format('MM')]}</td>
+                                #{/list}
+                            </tr>
+                        #{/list}
+					</tbody>
+				</table>
+
+	</div> <!-- .x6 -->
