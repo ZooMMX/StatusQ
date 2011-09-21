@@ -1,0 +1,76 @@
+#{extends 'main.html' /}
+
+    <div class="x4">
+
+        <div id="big_stats" class="clearfix">
+			<div class="stat">
+
+				<h4>Gran total</h4>
+
+                <span class="value">${ventaGeneral.format('#,##0.00')}</span>
+
+			</div>
+
+            <div class="xbreak"><br></div>
+
+
+            <table class="data info_table">
+
+                    <tbody>
+                        #{list items: sucursales, as:'sucursal'}
+                        <tr>
+                            <td class="value">${sucursal.venta.format("#,##0.00")}</td>
+                            <td class="full"><a href="@{Dashboard.show(sucursal.sucursal.id)}">${sucursal.sucursal.nombre}</a></td>
+                        </tr>
+                        #{/list}
+                    </tbody>
+                </table>
+
+
+		</div>
+
+	</div>
+
+	<div class="x4">
+
+
+			<table class="stats" data-chart="pie">
+				<caption>Por sucursal</caption>
+				<thead>
+					<tr>
+                        <td>&nbsp;</td>
+                        #{list items:sucursales, as:'sucursal'}
+						    <th>${sucursal.sucursal.nombre}</th>
+						#{/list}
+					</tr>
+
+				</thead>
+
+				<tbody>
+                    #{list items: sucursales, as:'sucursal'}
+					<tr>
+						<th>${sucursal.sucursal.nombre}</th>
+						<td>${sucursal.venta}</td>
+					</tr>
+                    #{/list}
+				</tbody>
+			</table>
+
+			<p>Proporción de ventas por sucursal para el día de hoy.</p>
+
+    </div>
+    <div class="x4 report_chart">
+
+			<h3>Estado del sistema</h3>
+
+			<table class="data reports_table">
+                #{list items: sucursales, as: 'sucursal'}
+                    <tr>
+                        <td class="description"><a href="@{Dashboard.show(sucursal.sucursal.id)}">${sucursal.sucursal.nombre}</a></td>
+                        <td class="value"><span class="${sucursal.sucursal.estado}">${sucursal.sucursal.estado}</span></td>
+                    </tr>
+				#{/list}
+
+			</table>
+		</div> <!-- .x4 -->
+

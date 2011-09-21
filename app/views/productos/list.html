@@ -1,24 +1,41 @@
-#{extends 'CRUD/layout.html' /}
-#{set title:messages.get('crud.list.title', type.name) /}
+#{extends 'main.html' /}
+<script src="@{'/public/javascripts/misc/excanvas.min.js'}"></script>
 
-<div id="crudList" class="${type.name}">
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+     $('#crudListTable table').dataTable( {
 
-    <h2 id="crudListTitle">&{'crud.list.title', type.name}</h2>
+        "bProcessing": true,
+        "bServerSide": true,
+        "sAjaxSource": '@{Productos.listJson()}',
+        "bSort"      : false,
+        aoColumns: [
 
-    <div id="crudListSearch">
-        #{crud.search /}
-    </div>
+              { sTitle: "Código"      },
+              { sTitle: "Descripción" },
+              { sTitle: "Costo"       },
+              { sTitle: "Precio"      }
 
-    <div id="crudListTable">
-        #{crud.table fields:['nombre', 'precio']/}
-    </div>
+        ],
+        "fnServerParams": function ( aoData ) {
+			aoData.push( { "name": "sucursal_id", "value": "${sucursal_id}" } );
+		}
+     });
+  });
+</script>
 
-    <div id="crudListPagination">
-        #{crud.pagination /}
-    </div>
 
-    <p id="crudListAdd">
-        <a href="@{blank()}">&{'crud.add', type.modelName}</a>
-    </p>
 
+<div id="content" class="xgrid">
+
+		<div class="x12">
+
+            <div id="crudListTable">
+               <table class="data display datatable"></table>
+            </div>
+
+        </div>
 </div>
+
+
+

@@ -1,22 +1,25 @@
 package controllers;
 
-import play.*;
 import play.mvc.*;
-
-import java.util.*;
-
 import models.*;
 
+@With(Secure.class)
 public class Application extends Controller {
 
     @Before
     static void addDefaults() {
-        renderArgs.put("tab", "Home");
-        renderArgs.put("sucursals", Sucursal.findAll());
+        String userName = Seguridad.connected();
+
+        renderArgs.put("tab"      , "Home"               );
+        renderArgs.put("sucursals", Sucursal.findAll()   );
+        renderArgs.put("usuario"  , userName             );
+        renderArgs.put("isAdmin"  , Usuario.find("byUsername", userName).<Usuario>first().isAdmin);
+
     }
 
     public static void index() {
-        render();
+        //render();
+        Dashboard.overall();
     }
 
 }

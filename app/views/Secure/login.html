@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title>Login | Dashboard Admin</title>
+
+	<link rel="stylesheet" href="@{'/public/stylesheets/reset.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/text.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/form.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/buttons.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/login.css'}" type="text/css" media="screen" title="no title" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<body>
+
+<div id="login">
+	<h1>&{'secure.title'}</h1>
+	<div id="login_panel">
+		#{form @authenticate()}
+
+			<div class="login_fields">
+                    #{if flash.error}
+                        <div class="field">
+                            <p class="error">
+                                &{flash.error}
+                            </p>
+                        </div>
+                    #{/if}
+                    #{if flash.success}
+                        <div class="field">
+                            <p class="success">
+                                &{'secure.success'}
+                            </p>
+                        </div>
+                    #{/if}
+
+				<div class="field">
+					<label for="email">&{'secure.username'}</label>
+					<input type="text" name="username" value="${flash.username}" id="username" tabindex="1" placeholder="Nombre de usuario" />
+				</div>
+
+				<div class="field">
+					<label for="password">&{'secure.password'} <small><a href="">&{'secure.forgot'}</a></small></label>
+					<input type="password" name="password" value="" id="password" tabindex="2" placeholder="Contraseña" />
+				</div>
+                <div class="field">
+					<label for="remember">&{'secure.remember'}</label>
+					<input type="checkbox" name="remember" value="" id="remember" tabindex="2" ${flash.remember ? 'checked="true"' : ''}/>
+				</div>
+			</div> <!-- .login_fields -->
+
+			<div class="login_actions">
+				<button type="submit" id="signin" class="btn btn-orange" tabindex="3" value="&{'secure.signin'}">&{'secure.signin'}</button>
+			</div>
+		#{/form}
+</div> <!-- #login_panel -->
+</div> <!-- #login -->
+
+</body>
+
+</html>
+

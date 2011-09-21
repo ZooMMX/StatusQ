@@ -29,4 +29,11 @@ public class VentaPorDia extends Model {
 		return sdf.format(fecha);
 		//return String.valueOf(venta);
 	}
+
+    public void setVenta(BigDecimal venta) {
+        if(venta == null) {
+            venta = new BigDecimal(0);
+        }
+        this.venta = venta;
+    }
 }

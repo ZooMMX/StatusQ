@@ -1,4 +1,11 @@
 # You can specialize this file for each language.
 # For example, for French create a messages.fr file
 #
-since.days=Hace %s día%s
+since.days      = Hace %s día%s
+secure.username = Nombre de usuario
+secure.password = Contraseña
+secure.signin   = Ingresar
+secure.remember = Recordar datos
+secure.forgot   = ¿Olvidó su contraseña?
+secure.error    = Usuario o contraseña incorrectos
+secure.success  = Cerraste sesión. Hasta luego!

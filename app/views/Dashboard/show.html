@@ -11,6 +11,7 @@
 
                 <form action="@{Productos.list()}" method="get" class="form label-inline uniform" />
                     <!--<input id="fname" name="fname" size="20" style="font-size:18px" type="text" class="small" />-->
+                    <input type=hidden name="sucursal_id" value="${id}">
                     <button class="btn btn-large">Consultar Productos</button>
                     <!--<button class="btn btn-black">Todos</button>-->
                 </form>

@@ -2,11 +2,12 @@ package jobs;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
- * User: octavioruizcastillo
+ * Usuario: octavioruizcastillo
  * Date: 21/08/11
  * Time: 11:55
  */
 
+import models.EstadoSucursal;
 import models.Producto;
 import models.Sucursal;
 import models.VentaPorDia;
@@ -28,9 +29,13 @@ public class SyncVentas extends Job {
         List<Sucursal> sucursalList = Sucursal.findAll();
         for (Sucursal suc : sucursalList) {
 
+            //if(suc.estado == EstadoSucursal.OFFLINE) { continue; }
+
             MyJDBCHelper bd = null;
 
             try {
+                System.out.println("- Consultando ventas de "+suc.nombre);
+
                 bd = new MyJDBCHelper(suc.bdURL, suc.bdUser, suc.bdPass);
                 bd.execute("select curdate() as hoy, sum(total) as total from omoikane.ventas where fecha_hora between curdate() and DATE_ADD(curdate(), INTERVAL 1 DAY)");
 
@@ -47,10 +52,13 @@ public class SyncVentas extends Job {
                 } else {
                   vpd.venta = total;
                 }
+
                 vpd.save();
+                System.out.println("- Ventas consultadas corectamente! de "+suc.nombre+" importe: "+total);
 
             } catch (SQLException e) {
-                Logger.getLogger(SyncVentas.class.getName()).log(Level.SEVERE, null, e);
+                System.out.println("- Error al consultar ventas de "+suc.nombre);
+                //Logger.getLogger(SyncVentas.class.getName()).log(Level.SEVERE, null, e);
             }
             if(bd != null) { bd.close(); }
 

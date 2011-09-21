@@ -2,7 +2,7 @@ package jobs;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
- * User: octavioruizcastillo
+ * Usuario: octavioruizcastillo
  * Date: 21/08/11
  * Time: 11:55
  */
@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Every("10s")
+@Every("60s")
 public class CheckStatus extends Job {
 
     public void doJob() {
-        System.out.println("Ejecutando SyncVentas;");
+        System.out.println("Ejecutando CheckStatus;");
         List<Sucursal> sucursalList = Sucursal.findAll();
         for (Sucursal suc : sucursalList) {
 

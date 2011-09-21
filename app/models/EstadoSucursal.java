@@ -2,7 +2,7 @@ package models;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
- * User: octavioruizcastillo
+ * Usuario: octavioruizcastillo
  * Date: 21/08/11
  * Time: 10:29
  */
