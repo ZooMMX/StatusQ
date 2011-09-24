@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<title>Instalación Status Q</title>
+
+	<link rel="stylesheet" href="@{'/public/stylesheets/reset.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/text.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/form.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/buttons.css'}" type="text/css" media="screen" title="no title" />
+	<link rel="stylesheet" href="@{'/public/stylesheets/login.css'}" type="text/css" media="screen" title="no title" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<body>
+
+<div id="login">
+	<h1>Instalación</h1>
+	<div id="login_panel">
+		#{form @install()}
+
+			<div class="login_fields">
+                    #{if flash.error}
+                        <div class="field">
+                            <p class="error">
+                                &{flash.error}
+                            </p>
+                        </div>
+                    #{/if}
+                    #{if flash.success}
+                        <div class="field">
+                            <p class="success">
+                                &{'secure.success'}
+                            </p>
+                        </div>
+                    #{/if}
+
+				<div class="field">
+					<label for="email">Nombre de usuario</label>
+					<input type="text" name="user" value="${flash.username}" id="user" tabindex="1" placeholder="Nombre de usuario" />
+				</div>
+
+				<div class="field">
+					<label for="password">Password</label>
+					<input type="password" name="pass" value="" id="pass" tabindex="2" placeholder="Contraseña" />
+				</div>
+			</div> <!-- .login_fields -->
+
+			<div class="login_actions">
+				<button type="submit" id="signin" class="btn btn-orange" tabindex="3" value="">Agregar administrador</button>
+			</div>
+		#{/form}
+</div> <!-- #login_panel -->
+</div> <!-- #login -->
+
+</body>
+
+</html>
+

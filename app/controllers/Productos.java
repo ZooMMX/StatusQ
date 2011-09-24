@@ -13,8 +13,8 @@ import java.util.List;
 public class Productos extends Application {
 
     public static void list(Long sucursal_id) {
-        //List<Producto> productos = Producto.all().from(0).fetch(50);
-        //renderArgs.put("productos", productos);
+        //List<Producto> Productos = Producto.all().from(0).fetch(50);
+        //renderArgs.put("Productos", Productos);
         Sucursal suc = Sucursal.findById(sucursal_id);
         renderArgs.put("tab"        , suc.nombre);
         renderArgs.put("sucursal_id", suc.id);

@@ -4,3 +4,4 @@ require:
     - play
     - play -> crud
     - play -> secure
+    - play -> playapps 1.4

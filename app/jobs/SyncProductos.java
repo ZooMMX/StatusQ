@@ -32,7 +32,7 @@ public class SyncProductos extends Job {
             if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
 
             try {
-                System.out.println("- Consultando productos de "+suc.nombre);
+                System.out.println("- Consultando Productos de "+suc.nombre);
                 bd = new MyJDBCHelper(suc.bdURL, suc.bdUser, suc.bdPass);
                 bd.rs = bd.stmt.executeQuery("select id,descripcion,costo,existencias,precio,utilidad,codigo from omoikane.ramcachearticulos");
 
@@ -63,7 +63,7 @@ public class SyncProductos extends Job {
                 System.out.println("Productos insertados " + bd.rs.getFetchSize());
             } catch (SQLException e) {
                 JPA.em().getTransaction().rollback();
-                System.out.println("- Error al consultar productos de "+suc.nombre);
+                System.out.println("- Error al consultar Productos de "+suc.nombre);
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
             if(bd != null) { bd.close(); }

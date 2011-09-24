@@ -28,7 +28,8 @@ public class Dashboard extends Application {
     public static void overall() {
 
         BigDecimal        ventaGeneral = VentaPorDia.find("SELECT sum(venta) FROM VentaPorDia group by fecha  order by fecha desc").first();
-        List<VentaPorDia> sucursales   = VentaPorDia.find("fecha = current_date order by venta desc").fetch();
+        Date              hoy          = VentaPorDia.find("SELECT max(fecha) FROM VentaPorDia").first();
+        List<VentaPorDia> sucursales   = VentaPorDia.find("fecha = ? order by venta desc", hoy).fetch();
 
         renderArgs.put("ventaGeneral", ventaGeneral);
         renderArgs.put("sucursales"  , sucursales);
