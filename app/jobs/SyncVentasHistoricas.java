@@ -34,7 +34,10 @@ public class SyncVentasHistoricas extends Job {
                 System.out.println("- Consultando ventas de "+suc.nombre);
 
                 bd = new MyJDBCHelper(suc.bdURL, suc.bdUser, suc.bdPass);
-                bd.execute("select date(fecha_hora) as fecha, sum(total) as total from omoikane.ventas group by date(fecha_hora)");
+                bd.execute("select date(fecha_hora) as fecha, sum(total) as total " +
+                        "from omoikane.ventas " +
+                        "where date(fecha_hora) < date(curdate())" +
+                        "group by date(fecha_hora)");
 
                 while ( bd.next() ) {
 

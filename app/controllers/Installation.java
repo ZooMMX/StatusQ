@@ -26,10 +26,12 @@ public class Installation extends Controller {
     }
 
     public static void fillDatabase() {
-        if(VentaPorDia.count()==0) {
-            new SyncVentasHistoricas().doJob();
-            renderText("Se inició la tarea SyncVentasHistoricas");
-        }
+
+
+        VentaPorDia.deleteAll();
+        new SyncVentasHistoricas().doJob();
+        renderText("Se concluyó la tarea SyncVentasHistoricas");
+
         Application.index();
     }
 }

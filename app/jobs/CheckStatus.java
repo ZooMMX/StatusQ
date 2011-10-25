@@ -10,6 +10,7 @@ package jobs;
 import models.EstadoSucursal;
 import models.Sucursal;
 import models.VentaPorDia;
+import play.Logger;
 import play.jobs.Every;
 import play.jobs.Job;
 
@@ -17,28 +18,35 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 @Every("60s")
 public class CheckStatus extends Job {
 
     public void doJob() {
-        System.out.println("Ejecutando CheckStatus;");
-        List<Sucursal> sucursalList = Sucursal.findAll();
-        for (Sucursal suc : sucursalList) {
+        try {
+            System.out.println("Ejecutando CheckStatus;");
+            List<Sucursal> sucursalList = Sucursal.findAll();
+            if(ConfigPools.pools==null) { throw new Exception("Pool de conexiones nulo"); }
 
-            try {
-                MyJDBCHelper bd = new MyJDBCHelper(suc.bdURL, suc.bdUser, suc.bdPass);
-                suc.estado = EstadoSucursal.ONLINE;
-                bd.close();
-            } catch (SQLException e) {
-                Logger.getLogger(CheckStatus.class.getName()).log(Level.SEVERE, null, e);
-                suc.estado = EstadoSucursal.OFFLINE;
+            for (Sucursal suc : sucursalList) {
+                MyJDBCHelper bd = null;
+                try {
+                    bd = new MyJDBCHelper(ConfigPools.pools.get(suc.id).getConnection());
+                    suc.estado = EstadoSucursal.ONLINE;
+
+                } catch (Exception sqle) {
+                    Logger.info(sqle, "Falló conexión con la BD de la sucursal: "+suc.nombre);
+                    suc.estado = EstadoSucursal.OFFLINE;
+
+                } finally {
+                    suc.save();
+                    if(bd!=null) { bd.close(); }
+                }
+
             }
-            suc.save();
-
-
+        } catch (Exception e) {
+            Logger.error(e, "Excepción verificando estátus de sucursal");
         }
     }
 

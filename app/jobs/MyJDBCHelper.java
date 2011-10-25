@@ -31,6 +31,11 @@ import java.util.logging.Logger;
             }
         }
 
+        public MyJDBCHelper(Connection connection) throws SQLException {
+            con  = connection;
+            stmt = con.createStatement();
+        }
+
         public ResultSet execute(String query) {
             try {
                 System.out.println("-"+query);

@@ -11,6 +11,7 @@ import models.EstadoSucursal;
 import models.Producto;
 import models.Sucursal;
 import models.VentaPorDia;
+import play.Logger;
 import play.db.helper.JdbcHelper;
 import play.jobs.Every;
 import play.jobs.Job;
@@ -18,50 +19,57 @@ import play.jobs.Job;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 @Every("60s")
 public class SyncVentas extends Job {
 
     public void doJob() {
-        System.out.println("Ejecutando SyncVentas;");
-        List<Sucursal> sucursalList = Sucursal.findAll();
-        for (Sucursal suc : sucursalList) {
+        try {
+            System.out.println("Ejecutando SyncVentas;");
+            List<Sucursal> sucursalList = Sucursal.findAll();
+            for (Sucursal suc : sucursalList) {
 
-            //if(suc.estado == EstadoSucursal.OFFLINE) { continue; }
+                if(ConfigPools.pools==null) { throw new Exception("Pool de conexiones nulo"); }
+                if(suc.estado == EstadoSucursal.OFFLINE) { continue; }
+                Connection connection = ConfigPools.pools.get(suc.id).getConnection();
+                ResultSet  rs         = null;
+                Statement stmt        = null;
 
-            MyJDBCHelper bd = null;
+                try {
+                    System.out.println("- Consultando ventas de "+suc.nombre);
 
-            try {
-                System.out.println("- Consultando ventas de "+suc.nombre);
+                    stmt = connection.createStatement();
+                    rs   = stmt.executeQuery("select curdate() as hoy, sum(total) as total from omoikane.ventas where fecha_hora between curdate() and DATE_ADD(curdate(), INTERVAL 1 DAY)");
 
-                bd = new MyJDBCHelper(suc.bdURL, suc.bdUser, suc.bdPass);
-                bd.execute("select curdate() as hoy, sum(total) as total from omoikane.ventas where fecha_hora between curdate() and DATE_ADD(curdate(), INTERVAL 1 DAY)");
+                    rs.next();
 
-                bd.next();
+                    final Date fecha       = rs.getDate("hoy");
+                    final BigDecimal total = rs.getBigDecimal("total");
 
-                final Date fecha       = bd.rs.getDate("hoy");
-                final BigDecimal total = bd.rs.getBigDecimal("total");
+                    VentaPorDia vpd = VentaPorDia.find("byFechaAndSucursal_id", fecha, suc.getId()).first();
 
-                VentaPorDia vpd = VentaPorDia.find("byFechaAndSucursal_id", fecha, suc.getId()).first();
+                    if(vpd == null)  {
+                       vpd = new VentaPorDia(fecha, total);
+                       vpd.sucursal = suc;
+                    } else {
+                      vpd.venta = total;
+                    }
 
-                if(vpd == null)  {
-                   vpd = new VentaPorDia(fecha, total);
-                   vpd.sucursal = suc;
-                } else {
-                  vpd.venta = total;
+                    vpd.save();
+
+                } catch (Exception ex) {
+                    Logger.error("Error consultando ventas de "+suc.nombre, ex);
+                    ex.printStackTrace();
+                } finally {
+                    if(rs         != null) rs.close();
+                    if(stmt       != null) stmt.close();
+                    if(connection != null) connection.close();
                 }
 
-                vpd.save();
-                System.out.println("- Ventas consultadas corectamente! de "+suc.nombre+" importe: "+total);
-
-            } catch (SQLException e) {
-                System.out.println("- Error al consultar ventas de "+suc.nombre);
-                //Logger.getLogger(SyncVentas.class.getName()).log(Level.SEVERE, null, e);
             }
-            if(bd != null) { bd.close(); }
-
+        } catch (Exception e) {
+            Logger.error(e, "Error al consultar ventas del día");
         }
     }
 

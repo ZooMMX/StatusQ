@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Every("6000s")
+
 public class SyncProductos extends Job {
 
     public void doJob() {
@@ -61,7 +61,7 @@ public class SyncProductos extends Job {
                 }
                 JPA.em().getTransaction().commit();
                 System.out.println("Productos insertados " + bd.rs.getFetchSize());
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 JPA.em().getTransaction().rollback();
                 System.out.println("- Error al consultar Productos de "+suc.nombre);
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
