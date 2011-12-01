@@ -7,6 +7,7 @@ package jobs;
  * Time: 11:55
  */
 
+import models.EstadoSucursal;
 import models.Producto;
 import models.Sucursal;
 import models.VentaPorDia;
@@ -20,14 +21,22 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+//@Every("500s")
 public class SyncProductos extends Job {
 
     public void doJob() {
+        //Clientes clientes = new Clientes();
+        //clientes.publicarComando("getProductos");
+
+
         System.out.println("Ejecutando SyncProductos;");
         List<Sucursal> sucursalList = Sucursal.findAll();
         for (Sucursal suc : sucursalList) {
 
+            if(suc.estado == EstadoSucursal.OFFLINE) {
+                play.Logger.info("[SyncProductos] " + suc.nombre + " offline");
+                continue;
+            }
             MyJDBCHelper bd = null;
             if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
 
@@ -64,7 +73,6 @@ public class SyncProductos extends Job {
             } catch (Exception e) {
                 JPA.em().getTransaction().rollback();
                 System.out.println("- Error al consultar Productos de "+suc.nombre);
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
             if(bd != null) { bd.close(); }
 

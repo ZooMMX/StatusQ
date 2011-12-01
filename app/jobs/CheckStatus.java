@@ -15,12 +15,13 @@ import play.jobs.Every;
 import play.jobs.Job;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
 
-@Every("60s")
+//@Every("30s")
 public class CheckStatus extends Job {
 
     public void doJob() {
@@ -32,11 +33,13 @@ public class CheckStatus extends Job {
             for (Sucursal suc : sucursalList) {
                 MyJDBCHelper bd = null;
                 try {
-                    bd = new MyJDBCHelper(ConfigPools.pools.get(suc.id).getConnection());
+                    Connection conn = ConfigPools.pools.get(suc.id).getConnection();
+                    if(!conn.isValid(2)) { throw new SQLException("Sin conexión"); }
                     suc.estado = EstadoSucursal.ONLINE;
+                    Logger.info("[CheckStatus] "+suc.nombre+ " online");
 
                 } catch (Exception sqle) {
-                    Logger.info(sqle, "Falló conexión con la BD de la sucursal: "+suc.nombre);
+                    Logger.info(sqle, "[CheckStatus] "+suc.nombre + " offline");
                     suc.estado = EstadoSucursal.OFFLINE;
 
                 } finally {

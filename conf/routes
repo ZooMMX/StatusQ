@@ -17,7 +17,9 @@ GET     /public/                                staticDir:public
 # Import Secure routes
 *       /                                       module:secure
 
-GET     /productos/list.json                            Productos.listJson
+GET     /productos/list.json                    Productos.listJson
+
+WS      /hola                                   WebSocket.hola
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

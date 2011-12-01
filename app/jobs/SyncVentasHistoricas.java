@@ -60,7 +60,7 @@ public class SyncVentasHistoricas extends Job {
 
             } catch (SQLException e) {
                 System.out.println("- Error al consultar ventas de "+suc.nombre);
-                Logger.getLogger(SyncVentas.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(SyncVentasHistoricas.class.getName()).log(Level.SEVERE, null, e);
             }
             if(bd != null) { bd.close(); }
 
