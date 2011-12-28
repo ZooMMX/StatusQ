@@ -1,5 +1,52 @@
 #{extends 'main.html' /}
 
+    <div
+        id=pubnub
+        pub-key=pub-24eb74f7-b8f9-485a-86bb-a08f05c7cb89
+        sub-key=sub-b3f1fd2e-1897-11e1-8b36-c5b5280f91f0
+        ssl=off
+        origin=pubsub.pubnub.com
+    ></div>
+    <script src=http://cdn.pubnub.com/pubnub-3.1.min.js ></script>
+    <script>(function(){
+        var importes = new Hashtable();
+        // ----------------------------------
+        // LISTEN FOR MESSAGES
+        // ----------------------------------
+        PUBNUB.subscribe({
+            channel  : 'servidor',
+            callback : function(message) {
+                if(message.command == "setVentas" && document.getElementById("ventaSucursal"+message.idSucursal)) {
+                    $(function() {
+                        $("#ventaSucursal"+message.idSucursal).slideToggle(350);
+                        $("#ventaSucursal"+message.idSucursal).html($.formatNumber(message.importe, {format:"#,##0.00", locale:"us"}));
+                        $("#pieVentaSucursal"+message.idSucursal).html(message.importe);
+                        $("#ventaSucursal"+message.idSucursal).slideToggle(350);
+                        $('.visualize').trigger('visualizeRefresh');
+                        importes.put(message.idSucursal, parseFloat(message.importe));
+
+                        if(importes.size() == ${sucursales.size()}) {
+                            var granTotal = 0;
+                            importes.each( function(k, v) {
+                                granTotal += v;
+                            })
+                            console.log(granTotal);
+                            $("#granTotal").fadeOut(350);
+                            $("#granTotal").html($.formatNumber(granTotal, {format:"#,##0.00", locale:"us"}));
+                            $("#granTotal").fadeIn(350);
+
+                        }
+                    });
+                    console.log(JSON.stringify(message));
+                }
+            },
+            error : function() {
+                // The internet is gone.
+                console.log("Connection Lost");
+            }
+        });
+
+    })(); </script>
     <div class="x4">
 
         <div id="big_stats" class="clearfix">
@@ -7,7 +54,7 @@
 
 				<h4>Gran total</h4>
 
-                <span class="value">${ventaGeneral.format('#,##0.00')}</span>
+                <span class="value" id="granTotal">${ventaGeneral.format('#,##0.00')}</span>
 
 			</div>
 
@@ -19,7 +66,7 @@
                     <tbody>
                         #{list items: sucursales, as:'sucursal'}
                         <tr>
-                            <td class="value">${sucursal.venta.format("#,##0.00")}</td>
+                            <td class="value"><div id="ventaSucursal${sucursal.sucursal.id}">${sucursal.venta.format("#,##0.00")}</div></td>
                             <td class="full"><a href="@{Dashboard.show(sucursal.sucursal.id)}">${sucursal.sucursal.nombre}</a></td>
                         </tr>
                         #{/list}
@@ -50,7 +97,7 @@
                     #{list items: sucursales, as:'sucursal'}
 					<tr>
 						<th>${sucursal.sucursal.nombre}</th>
-						<td>${sucursal.venta}</td>
+						<td id="pieVentaSucursal${sucursal.sucursal.id}" name="importeVenta">${sucursal.venta}</td>
 					</tr>
                     #{/list}
 				</tbody>
