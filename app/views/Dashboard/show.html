@@ -27,8 +27,13 @@
 			</div>
             <div class="stat">
 
-				<h4>Estado del sistema</h4>
-				<span class="value">${online?"En línea":"Desconectado"}</span>
+				<h4>Cámaras</h4>
+
+                #{list items:camaras, as:'camara'}
+                <a href="${camara.URL}">
+                    <button class="btn btn-large" onclick="window.location.href='${camara.URL}'">${camara.nombre}</button>
+                </a>
+                #{/list}
 
 
 			</div>

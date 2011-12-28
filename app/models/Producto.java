@@ -1,45 +1,56 @@
 package models;
 
-import play.*;
+import javax.persistence.*;
+import java.sql.*;
+import java.sql.Blob;
+import javax.sql.*;
+import java.math.*;
+import java.util.*;
+import java.util.Date;
+
 import play.db.jpa.*;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.*;
+@Entity
+@Table(name="Producto")
+@IdClass(ProductoId.class)
+public class Producto extends GenericModel{
 
-import java.text.*;
+	@Id
+	@Column(name="id")
+	public Long id;
 
-@javax.persistence.Entity
-public class Producto extends Model {
+	@Id
+	@Column(name="sucursal_id")
+	public Long sucursalId;
 
-	public String   nombre;
-	public BigDecimal precio;
+	@Column(name="codigo", length=255)
+	public String codigo;
+
+	@Column(name="costo")
 	public BigDecimal costo;
-	public BigDecimal utilidad;
-	public BigDecimal existencias;
-    public String codigo;
 
+	@Column(name="existencias")
+	public BigDecimal existencias;
+
+	@Column(name="nombre", length=255)
+	public String nombre;
+
+	@Column(name="precio")
+	public BigDecimal precio;
+
+	@Column(name="utilidad")
+	public BigDecimal utilidad;
+
+    @JoinColumn(insertable = false, updatable = false)
     @ManyToOne
     public Sucursal sucursal;
 
-    /**
-     *
-     * @param nombre
-     * @param precio
-     * @param costo
-     * @param utilidad
-     * @param existencias
-     * @param codigo
-     */
     public Producto(String nombre, BigDecimal precio, BigDecimal costo, BigDecimal utilidad, BigDecimal existencias, String codigo) {
-		this.nombre = nombre;
-		this.precio  = precio;
-		this.costo   = costo;
-		this.utilidad = utilidad;
-		this.existencias = existencias;
-        this.codigo = codigo;
-	}
-	public String toString() {
-		return nombre;
-	}
+        this.nombre      = nombre;
+        this.precio      = precio;
+        this.costo       = costo;
+        this.utilidad    = utilidad;
+        this.existencias = existencias;
+        this.codigo      = codigo;
+    }
 }

@@ -1,9 +1,12 @@
 package jobs;
 
+import models.Producto;
+import models.ProductoId;
 import models.Sucursal;
 import models.VentaPorDia;
 import org.json.JSONObject;
 import play.Logger;
+import play.db.jpa.JPA;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import pubnub.Callback;
@@ -28,6 +31,7 @@ public class ClientListener extends Job {
         class Receiver extends Job implements Callback {
             public boolean execute(JSONObject message) {
 
+                Logger.info("Mensaje recibido");
                 EntityTransaction et = VentaPorDia.em().getTransaction();
 
                 try {
@@ -41,15 +45,41 @@ public class ClientListener extends Job {
 
                 } catch (Exception e) {
                     Logger.error("Error extrayendo información de JSON", e);
+                    e.printStackTrace();
                 }
 
                 // Continue Listening?
                 return true;
             }
 
-            private void setProductos(EntityTransaction et, ClientMessage msg) {
-                System.out.println("aqui");
-                throw new UnsupportedOperationException("Implementado del lado del servidor");
+            private synchronized void setProductos(EntityTransaction et, ClientMessage msg) {
+                if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
+                Sucursal sucursal = Sucursal.findById(msg.idSucursal);
+
+                for (Producto producto : msg.getProductos()) {
+                    ProductoId productoId = new ProductoId();
+                    productoId.id = producto.id;
+                    productoId.sucursalId = producto.sucursalId;
+
+                    Producto productoToSave = Producto.findById(productoId);
+                    if(productoToSave != null) {
+                        productoToSave.precio      = producto.precio;
+                        productoToSave.costo       = producto.costo;
+                        productoToSave.codigo      = producto.codigo;
+                        productoToSave.existencias = producto.existencias;
+                        productoToSave.nombre      = producto.nombre;
+                        productoToSave.utilidad    = producto.utilidad;
+
+                    } else {
+                        productoToSave = producto;
+                    }
+                    producto.sucursal = sucursal;
+                    System.out.println("Guardando producto: " + productoToSave + ",idsuc:" + productoToSave.sucursalId);
+                    productoToSave.save();
+
+                }
+                JPA.em().flush();
+                JPA.em().getTransaction().commit();
             }
 
             private void setVentas(EntityTransaction et, ClientMessage msg) {
