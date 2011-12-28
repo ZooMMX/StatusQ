@@ -1,10 +1,15 @@
 package jobs;
 
+import models.Producto;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import play.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
@@ -19,16 +24,47 @@ public class ClientMessage {
     }
     public Command       command;
     private VentaScurusal ventaScurusal;
+    private List<Producto> productoList;
 
     public ClientMessage(JSONObject message) throws JSONException {
+
         String comando = message.getString("command");
-        if(comando.equals("setVentas"))    { command = Command.setVentas; }
-        if(comando.equals("setProductos")) { command = Command.setProductos; }
         idSucursal = message.getLong("idSucursal");
 
-        ventaScurusal = new VentaScurusal();
-        ventaScurusal.setFecha(Date.valueOf(message.getString("fecha")));
-        ventaScurusal.setImporte(new BigDecimal(message.getString("importe")));
+
+        if(comando.equals("setVentas"))    {
+            command = Command.setVentas;
+
+            ventaScurusal = new VentaScurusal();
+            ventaScurusal.setFecha(Date.valueOf(message.getString("fecha")));
+            ventaScurusal.setImporte(new BigDecimal(message.getString("importe")));
+        }
+        else if(comando.equals("setProductos")) {
+            command = Command.setProductos;
+
+            productoList = new ArrayList<Producto>();
+            JSONArray    productosJSON = message.getJSONArray("productos");
+
+            for(int i = 0 ; i < productosJSON.length() ; i++) {
+                final JSONObject productoJSON = (JSONObject) productosJSON.get(i);
+
+                final Long       id          = productoJSON.getLong("id");
+                final String     nombre      = productoJSON.getString("descripcion");
+                final BigDecimal precio      = new BigDecimal(productoJSON.getString("precio"));
+                final BigDecimal costo       = new BigDecimal(productoJSON.getString("costo"));
+                final BigDecimal utilidad    = new BigDecimal(productoJSON.getString("utilidad"));
+                final BigDecimal existencias = new BigDecimal(productoJSON.getString("existencias"));
+                final String     codigo      = productoJSON.getString("codigo");
+                final Producto producto      = new Producto(nombre, precio, costo, utilidad, existencias, codigo);
+
+                producto.id = id;
+                producto.sucursalId = idSucursal;
+
+                productoList.add(producto);
+            }
+
+        }
+
     }
     public Date getVentaSucursalFecha() {
         return ventaScurusal.getFecha();
@@ -36,6 +72,10 @@ public class ClientMessage {
 
     public BigDecimal getVentaSucursalImporte() {
         return ventaScurusal.getImporte();
+    }
+
+    public List<Producto> getProductos() {
+        return productoList;
     }
 
     class VentaScurusal {
@@ -58,4 +98,5 @@ public class ClientMessage {
             this.importe = importe;
         }
     }
+
 }

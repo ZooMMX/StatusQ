@@ -1,10 +1,12 @@
 
 package controllers;
 
+import models.Camara;
 import models.EstadoSucursal;
 import models.Sucursal;
 import models.VentaPorDia;
 import play.db.jpa.JPA;
+import play.db.jpa.JPABase;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -66,6 +68,8 @@ public class Dashboard extends Application {
             renderArgs.put("tab"         , sucursal.nombre);
             renderArgs.put("id"          , id);
             renderArgs.put("titulo"      , "Sucursal "+sucursal.nombre);
+
+            renderArgs.put("camaras"     , Sucursal.<Sucursal>findById(id).camaras);
 
             render();
         } else {

@@ -38,6 +38,7 @@ public class SyncVentasHistoricas extends Job {
                         "from omoikane.ventas " +
                         "where date(fecha_hora) < date(curdate())" +
                         "group by date(fecha_hora)");
+                VentaPorDia.delete("sucursal_id = ?", suc.getId());
 
                 while ( bd.next() ) {
 
