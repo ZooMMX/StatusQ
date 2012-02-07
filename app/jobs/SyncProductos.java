@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Every("24h")
+//@Every("24h")
 public class SyncProductos extends Job {
 
     public void doJob() {

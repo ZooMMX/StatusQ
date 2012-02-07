@@ -14,7 +14,7 @@ import pubnub.Pubnub;
  * Date: 29/11/11
  * Time: 16:02
  */
-@Every("300s")
+@Every("180s")
 public class SyncVentas extends Job {
     public void doJob() {
         Clientes clientes = new Clientes();
