@@ -19,7 +19,7 @@ GET     /public/                                staticDir:public
 
 GET     /productos/list.json                    Productos.listJson
 
-WS      /hola                                   WebSocket.hola
+WS      /hola                                   websockets.WebSocket.hola
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
