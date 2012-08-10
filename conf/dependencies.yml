@@ -6,3 +6,4 @@ require:
     - play -> secure
     - play -> playapps 1.4
     - com.jolbox -> bonecp 0.7.1.RELEASE
+    - org.json -> json 20090211
