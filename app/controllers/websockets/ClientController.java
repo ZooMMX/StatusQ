@@ -1,9 +1,6 @@
 package controllers.websockets;
 
-import models.Producto;
-import models.ProductoId;
-import models.Sucursal;
-import models.VentaPorDia;
+import models.*;
 import org.json.JSONObject;
 import play.Logger;
 import play.db.jpa.JPA;
@@ -44,7 +41,9 @@ public class ClientController {
                     JSONObject pong = new JSONObject();
                     pong.put("command", "pong");
                     outbound.send(pong.toString());
-                    WebSocket.sucursalConectada(msg.idSucursal);
+                    Sucursal actual = ((Sucursal)Sucursal.findById(msg.idSucursal));
+                    actual.estado = EstadoSucursal.ONLINE;
+                    actual.save();
                 }
 
             } catch (Exception e) {

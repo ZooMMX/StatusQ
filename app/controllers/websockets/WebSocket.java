@@ -56,13 +56,13 @@ public class WebSocket extends WebSocketController {
 
     }
 
-    public static void sucursalDesconectada(Long sucursalId) {
+    private static void sucursalDesconectada(Long sucursalId) {
         Sucursal actual = ((Sucursal)Sucursal.findById(sucursalId));
         actual.estado = EstadoSucursal.OFFLINE;
         actual.save();
     }
 
-    public static void sucursalConectada(Long sucursalId) {
+    private static void sucursalConectada(Long sucursalId) {
         Sucursal actual = ((Sucursal)Sucursal.findById(sucursalId));
         actual.estado = EstadoSucursal.ONLINE;
         actual.save();
