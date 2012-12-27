@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.mvc.Http;
+import play.mvc.WebSocketController;
 
 import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ public class ClientController {
                     JSONObject pong = new JSONObject();
                     pong.put("command", "pong");
                     outbound.send(pong.toString());
+                    WebSocket.sucursalConectada(msg.idSucursal);
                 }
 
             } catch (Exception e) {

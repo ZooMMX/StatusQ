@@ -48,20 +48,20 @@ public class WebSocket extends WebSocketController {
 
             for(Http.WebSocketClose closed: e.SocketClosed.match(e)) {
                 Logger.info("Cliente desconectado");
-                inbound.close();
+                disconnect();
             }
         }
         sucursalDesconectada(sucursalId);
 
     }
 
-    private static void sucursalDesconectada(Long sucursalId) {
+    public static void sucursalDesconectada(Long sucursalId) {
         Sucursal actual = ((Sucursal)Sucursal.findById(sucursalId));
         actual.estado = EstadoSucursal.OFFLINE;
         actual.save();
     }
 
-    private static void sucursalConectada(Long sucursalId) {
+    public static void sucursalConectada(Long sucursalId) {
         Sucursal actual = ((Sucursal)Sucursal.findById(sucursalId));
         actual.estado = EstadoSucursal.ONLINE;
         actual.save();
