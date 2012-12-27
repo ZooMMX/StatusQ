@@ -7,6 +7,7 @@ import models.VentaPorDia;
 import org.json.JSONObject;
 import play.Logger;
 import play.db.jpa.JPA;
+import play.mvc.Http;
 
 import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
@@ -19,7 +20,13 @@ import java.sql.Date;
  * Time: 16:33
  */
 public class ClientController {
-        public boolean mensajeEntrante(JSONObject message) {
+    private Http.Outbound outbound;
+
+    public ClientController(Http.Outbound outbound) {
+        this.outbound = outbound;
+    }
+
+    public boolean mensajeEntrante(JSONObject message) {
 
             Logger.info("Mensaje recibido");
             EntityTransaction et = VentaPorDia.em().getTransaction();
@@ -31,6 +38,11 @@ public class ClientController {
                 }
                 if( msg.command == ClientMessage.Command.setProductos) {
                     setProductos(et, msg);
+                }
+                if( msg.command == ClientMessage.Command.ping ) {
+                    JSONObject pong = new JSONObject();
+                    pong.put("command", "pong");
+                    outbound.send(pong.toString());
                 }
 
             } catch (Exception e) {
