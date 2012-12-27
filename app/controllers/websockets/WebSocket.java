@@ -48,7 +48,8 @@ public class WebSocket extends WebSocketController {
 
             for(Http.WebSocketClose closed: e.SocketClosed.match(e)) {
                 Logger.info("Cliente desconectado");
-                disconnect();
+                inbound.close();
+                outbound.close();
             }
         }
         sucursalDesconectada(sucursalId);
