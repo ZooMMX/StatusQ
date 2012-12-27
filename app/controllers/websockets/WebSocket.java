@@ -48,6 +48,7 @@ public class WebSocket extends WebSocketController {
 
             for(Http.WebSocketClose closed: e.SocketClosed.match(e)) {
                 Logger.info("Cliente desconectado");
+                inbound.close();
             }
         }
         sucursalDesconectada(sucursalId);
@@ -89,6 +90,7 @@ public class WebSocket extends WebSocketController {
                     Logger.error(e, "Excepción fijando comando en cadena JSON");
                 }
             }
+            Logger.info("Se cierra el hilo saliente");
         }
     }
 }
