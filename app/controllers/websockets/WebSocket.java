@@ -80,13 +80,13 @@ public class WebSocket extends WebSocketController {
         public void run() {
             Logger.info("Inicia hilo saliente");
 			Every every30sec = new Every(30);
-			Every everyHour = new Every(3600);
+			Every everyHour = new Every(60);
             while(inbound.isOpen()) {
                 try {
                     if(every30sec.run()) {
-					JSONObject msg = new JSONObject();
-					msg.put("command", "getVentas");
-					outbound.send(msg.toString());
+						JSONObject msg = new JSONObject();
+						msg.put("command", "getVentas");
+						outbound.send(msg.toString());
 					}
 					if(everyHour.run()) {
 						JSONObject msg = new JSONObject();
