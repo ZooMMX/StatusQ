@@ -1,0 +1,4 @@
+self: play -> dotcloud 0.3
+
+require:
+    - play
