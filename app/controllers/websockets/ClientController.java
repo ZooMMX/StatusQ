@@ -78,10 +78,10 @@ public class ClientController {
                     productoToSave = producto;
                 }
                 producto.sucursal = sucursal;
-                System.out.print(".");
                 productoToSave.save();
 
             }
+			Logger.info("Finalizó la carga de productos de la sucursal: "+sucursal.nombre);
             JPA.em().flush();
             JPA.em().getTransaction().commit();
         }
