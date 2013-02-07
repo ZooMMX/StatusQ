@@ -77,18 +77,39 @@ public class WebSocket extends WebSocketController {
 
         public void run() {
             Logger.info("Inicia hilo saliente");
+            Every every30sec = new Every(30);
+            Every everyHour = new Every(3600);
             while(inbound.isOpen()) {
                 try {
-                    JSONObject msg = new JSONObject();
-                    msg.put("command", "getVentas");
-                    outbound.send(msg.toString());
-                    Thread.sleep(30000);
+                    if(every30sec.run()) {
+                        JSONObject msg = new JSONObject();
+                        msg.put("command", "getVentas");
+                        outbound.send(msg.toString());
+                    }
+                    if(everyHour.run()) {
+                        JSONObject msg = new JSONObject();
+                        msg.put("command", "getProductos");
+                        outbound.send(msg.toString());
+                    }
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     Logger.error(e, "Interrupción del hilo saliente");
                 } catch (JSONException e) {
                     Logger.error(e, "Excepción fijando comando en cadena JSON");
                 }
             }
+        }
+    }
+
+    public static class Every {
+        public int count = 0;
+        public int every;
+        public Every(int every) {
+            this.every = every;
+        }
+        public boolean run() {
+            if(count >= every) { count = 0; }
+            return count++ == 0;
         }
     }
 }

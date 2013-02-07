@@ -12,6 +12,7 @@ import java.util.List;
 @With(Secure.class)
 public class Productos extends Application {
 
+
     public static void list(Long sucursal_id) {
         //List<Producto> Productos = Producto.all().from(0).fetch(50);
         //renderArgs.put("Productos", Productos);
