@@ -21,6 +21,8 @@ GET     /productos/list.json                    Productos.listJson
 
 WS      /hola                                   websockets.WebSocket.hola
 
+WS      /hello                                  WSPrueba.hello
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}
 

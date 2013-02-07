@@ -20,7 +20,7 @@ import java.util.List;
 public class ClientMessage {
     public Long idSucursal;
     public enum Command {
-        setVentas, setProductos
+        setVentas, setProductos, ping
     }
     public Command       command;
     private VentaScurusal ventaScurusal;
@@ -63,6 +63,9 @@ public class ClientMessage {
                 productoList.add(producto);
             }
 
+        }
+        else if(comando.equals("ping")) {
+            command = Command.ping;
         }
 
     }

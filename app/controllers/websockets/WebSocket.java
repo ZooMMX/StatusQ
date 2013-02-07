@@ -38,7 +38,7 @@ public class WebSocket extends WebSocketController {
 
                 try {
                     JSONObject mensajeEntrante = new JSONObject(frame.textData);
-                    ClientController clientController = new ClientController();
+                    ClientController clientController = new ClientController(outbound);
                     clientController.mensajeEntrante(mensajeEntrante);
                 } catch (JSONException e1) {
                     Logger.error(e1, "Excepción leyendo JSON entrante");
@@ -48,6 +48,8 @@ public class WebSocket extends WebSocketController {
 
             for(Http.WebSocketClose closed: e.SocketClosed.match(e)) {
                 Logger.info("Cliente desconectado");
+                inbound.close();
+                outbound.close();
             }
         }
         sucursalDesconectada(sucursalId);
@@ -98,6 +100,7 @@ public class WebSocket extends WebSocketController {
                     Logger.error(e, "Excepción fijando comando en cadena JSON");
                 }
             }
+            Logger.info("Se cierra el hilo saliente");
         }
     }
 
