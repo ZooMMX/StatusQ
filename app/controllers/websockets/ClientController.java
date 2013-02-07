@@ -58,7 +58,8 @@ public class ClientController {
         private synchronized void setProductos(EntityTransaction et, ClientMessage msg) {
             if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
-
+			
+			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);
             for (Producto producto : msg.getProductos()) {
                 ProductoId productoId = new ProductoId();
                 productoId.id = producto.id;
@@ -77,7 +78,7 @@ public class ClientController {
                     productoToSave = producto;
                 }
                 producto.sucursal = sucursal;
-                System.out.println("Guardando producto: " + productoToSave + ",idsuc:" + productoToSave.sucursalId);
+                System.out.print(".");
                 productoToSave.save();
 
             }
