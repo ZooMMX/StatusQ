@@ -77,12 +77,14 @@ public class ClientController {
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 			
 			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);
+            Hashtable<ProductoId, Producto> productosCache = allProductosCache();
+
             for (Producto producto : msg.getProductos()) {
                 ProductoId productoId = new ProductoId();
                 productoId.id = producto.id;
                 productoId.sucursalId = producto.sucursalId;
 
-                Producto productoToSave = allProductosCache().get(productoId);
+                Producto productoToSave = productosCache.get(productoId);
                 if(productoToSave != null) {
                     productoToSave.precio      = producto.precio;
                     productoToSave.costo       = producto.costo;
