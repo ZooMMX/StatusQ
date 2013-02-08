@@ -69,7 +69,7 @@ public class ClientController {
         }
 
         private void setProductos(ClientMessage msg) {
-            if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
+            //if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 
 			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
