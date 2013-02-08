@@ -57,35 +57,19 @@ public class ClientController {
             return true;
         }
 
-		public Hashtable<ProductoId, Producto> allProductosCache() {
-		    Hashtable<ProductoId, Producto> productos = Cache.get("productos", Hashtable.class);
-		    if(productos == null) {
-                productos = new Hashtable<ProductoId, Producto>();
-		        for(Producto p : Producto.<Producto>findAll()) {
-                    ProductoId productoId = new ProductoId();
-                    productoId.id = p.id;
-                    productoId.sucursalId = p.sucursalId;
-                    productos.put(productoId, p);
-                }
-		        Cache.set("productos", productos, "30mn");
-		    }
-			return productos;
-		}
-
         private synchronized void setProductos(EntityTransaction et, ClientMessage msg) {
             if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 			
-			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);
-            Hashtable<ProductoId, Producto> productosCache = allProductosCache();
-            Logger.info("post-cache" + productosCache.size());
+			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
 
+            int i = 0;
             for (Producto producto : msg.getProductos()) {
                 ProductoId productoId = new ProductoId();
                 productoId.id = producto.id;
                 productoId.sucursalId = producto.sucursalId;
 
-                Producto productoToSave = productosCache.get(productoId);
+                Producto productoToSave = Producto.findById(productoId);
                 if(productoToSave != null) {
                     productoToSave.precio      = producto.precio;
                     productoToSave.costo       = producto.costo;
@@ -99,10 +83,10 @@ public class ClientController {
                 }
                 producto.sucursal = sucursal;
                 productoToSave.save();
+                if(++i % 1000 == 0) { Producto.em().flush(); Producto.em().clear(); }
 
             }
 			Logger.info("Finalizó la carga de productos de la sucursal: "+sucursal.nombre);
-            JPA.em().flush();
             JPA.em().getTransaction().commit();
         }
 
