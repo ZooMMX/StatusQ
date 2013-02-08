@@ -82,7 +82,7 @@ public class ClientController {
                 productoId.id = producto.id;
                 productoId.sucursalId = producto.sucursalId;
 
-                Producto productoToSave = allProductosCache().get(productoId.id);
+                Producto productoToSave = allProductosCache().get(productoId);
                 if(productoToSave != null) {
                     productoToSave.precio      = producto.precio;
                     productoToSave.costo       = producto.costo;
