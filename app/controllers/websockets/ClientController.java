@@ -29,10 +29,10 @@ public class ClientController {
     public boolean mensajeEntrante(JSONObject message) {
 
             Logger.info("Mensaje recibido");
-            EntityTransaction et = VentaPorDia.em().getTransaction();
+            final EntityTransaction et = VentaPorDia.em().getTransaction();
 
             try {
-                ClientMessage msg = new ClientMessage(message);
+                final ClientMessage msg = new ClientMessage(message);
                 if( msg.command == ClientMessage.Command.setVentas ) {
                     setVentas(et, msg);
                 }
