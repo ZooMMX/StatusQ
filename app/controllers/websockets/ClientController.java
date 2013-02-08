@@ -77,7 +77,9 @@ public class ClientController {
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 			
 			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);
+            Logger.info("Precache");
             Hashtable<ProductoId, Producto> productosCache = allProductosCache();
+            Logger.info("post-cache");
 
             for (Producto producto : msg.getProductos()) {
                 ProductoId productoId = new ProductoId();
