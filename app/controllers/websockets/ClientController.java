@@ -39,6 +39,7 @@ public class ClientController {
                 }
                 if( msg.command == ClientMessage.Command.setProductos) {
                     new SetProductosJob(msg).now();
+                    Logger.info("Paso 1");
                 }
                 if( msg.command == ClientMessage.Command.ping ) {
                     JSONObject pong = new JSONObject();
@@ -69,6 +70,13 @@ public class ClientController {
 
             private void setProductos(ClientMessage msg) {
                 //if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+                Logger.info("Paso 2");
+
                 Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 
                 Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
