@@ -86,7 +86,7 @@ public class ClientController {
                 if(++i % 1000 == 0) { Producto.em().flush(); Producto.em().clear(); }
 
             }
-			Logger.info("Finalizó la carga de productos de la sucursal: "+sucursal.nombre);
+			Logger.info("Finalizo la carga de productos("+i+") de la sucursal: "+sucursal.nombre);
             JPA.em().getTransaction().commit();
         }
 

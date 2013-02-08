@@ -93,7 +93,7 @@ public class WebSocket extends WebSocketController {
 						msg.put("command", "getProductos");
 						outbound.send(msg.toString());
 					}
-					Thread.sleep(1000);
+					Thread.sleep(3000);
 					
                 } catch (InterruptedException e) {
                     Logger.error(e, "Interrupción del hilo saliente");
