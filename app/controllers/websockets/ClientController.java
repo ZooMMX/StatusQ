@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import play.Logger;
 import play.cache.Cache;
 import play.db.jpa.JPA;
+import play.jobs.Job;
 import play.mvc.Http;
 import play.mvc.WebSocketController;
 
@@ -37,9 +38,7 @@ public class ClientController {
                     setVentas(et, msg);
                 }
                 if( msg.command == ClientMessage.Command.setProductos) {
-                    new Thread() { public void run() {
-                            setProductos(et, msg);
-                        } }.start();
+                    new SetProductosJob(msg).doJob();
                 }
                 if( msg.command == ClientMessage.Command.ping ) {
                     JSONObject pong = new JSONObject();
@@ -59,10 +58,20 @@ public class ClientController {
             return true;
         }
 
-        private synchronized void setProductos(EntityTransaction et, ClientMessage msg) {
-            if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
+        public class SetProductosJob extends Job {
+            ClientMessage msg;
+
+            public SetProductosJob(ClientMessage msg) { this.msg = msg; }
+
+            public void doJob() {
+                setProductos(msg);
+            }
+        }
+
+        private void setProductos(ClientMessage msg) {
+            if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
-			
+
 			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
 
             int i = 0;
@@ -89,7 +98,7 @@ public class ClientController {
 
             }
 			Logger.info("Finalizo la carga de productos("+i+") de la sucursal: "+sucursal.nombre);
-            JPA.em().getTransaction().commit();
+            Producto.em().getTransaction().commit();
         }
 
         private void setVentas(EntityTransaction et, ClientMessage msg) {
