@@ -3,6 +3,7 @@ package controllers.websockets;
 import models.*;
 import org.json.JSONObject;
 import play.Logger;
+import play.cache.Cache;
 import play.db.jpa.JPA;
 import play.mvc.Http;
 import play.mvc.WebSocketController;
@@ -10,6 +11,7 @@ import play.mvc.WebSocketController;
 import javax.persistence.EntityTransaction;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Hashtable;
 
 /**
  * Proyecto Omoikane: SmartPOS 2.0
@@ -55,6 +57,21 @@ public class ClientController {
             return true;
         }
 
+		public Hashtable<ProductoId, Producto> allProductosCache() {
+		    Hashtable<ProductoId, Producto> productos = Cache.get("productos", Hashtable.class);
+		    if(productos == null) {
+                productos = new Hashtable<ProductoId, Producto>();
+		        for(Producto p : Producto.<Producto>findAll()) {
+                    ProductoId productoId = new ProductoId();
+                    productoId.id = p.id;
+                    productoId.sucursalId = p.sucursalId;
+                    productos.put(productoId, p);
+                }
+		        Cache.set("productos", productos, "30mn");
+		    }
+			return productos;
+		}
+
         private synchronized void setProductos(EntityTransaction et, ClientMessage msg) {
             if(!JPA.em().getTransaction().isActive()) { JPA.em().getTransaction().begin(); }
             Sucursal sucursal = Sucursal.findById(msg.idSucursal);
@@ -65,7 +82,7 @@ public class ClientController {
                 productoId.id = producto.id;
                 productoId.sucursalId = producto.sucursalId;
 
-                Producto productoToSave = Producto.findById(productoId);
+                Producto productoToSave = allProductosCache().get(productoId.id);
                 if(productoToSave != null) {
                     productoToSave.precio      = producto.precio;
                     productoToSave.costo       = producto.costo;
