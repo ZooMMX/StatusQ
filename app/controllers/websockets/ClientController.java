@@ -38,7 +38,7 @@ public class ClientController {
                     setVentas(et, msg);
                 }
                 if( msg.command == ClientMessage.Command.setProductos) {
-                    new SetProductosJob(msg).doJob();
+                    new SetProductosJob(msg).now();
                 }
                 if( msg.command == ClientMessage.Command.ping ) {
                     JSONObject pong = new JSONObject();
@@ -66,39 +66,39 @@ public class ClientController {
             public void doJob() {
                 setProductos(msg);
             }
-        }
 
-        private void setProductos(ClientMessage msg) {
-            //if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
-            Sucursal sucursal = Sucursal.findById(msg.idSucursal);
+            private void setProductos(ClientMessage msg) {
+                //if(!Producto.em().getTransaction().isActive()) { Producto.em().getTransaction().begin(); }
+                Sucursal sucursal = Sucursal.findById(msg.idSucursal);
 
-			Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
+                Logger.info("Guardando productos. Sucursal: "+sucursal.nombre);;
 
-            int i = 0;
-            for (Producto producto : msg.getProductos()) {
-                ProductoId productoId = new ProductoId();
-                productoId.id = producto.id;
-                productoId.sucursalId = producto.sucursalId;
+                int i = 0;
+                for (Producto producto : msg.getProductos()) {
+                    ProductoId productoId = new ProductoId();
+                    productoId.id = producto.id;
+                    productoId.sucursalId = producto.sucursalId;
 
-                Producto productoToSave = Producto.findById(productoId);
-                if(productoToSave != null) {
-                    productoToSave.precio      = producto.precio;
-                    productoToSave.costo       = producto.costo;
-                    productoToSave.codigo      = producto.codigo;
-                    productoToSave.existencias = producto.existencias;
-                    productoToSave.nombre      = producto.nombre;
-                    productoToSave.utilidad    = producto.utilidad;
+                    Producto productoToSave = Producto.findById(productoId);
+                    if(productoToSave != null) {
+                        productoToSave.precio      = producto.precio;
+                        productoToSave.costo       = producto.costo;
+                        productoToSave.codigo      = producto.codigo;
+                        productoToSave.existencias = producto.existencias;
+                        productoToSave.nombre      = producto.nombre;
+                        productoToSave.utilidad    = producto.utilidad;
 
-                } else {
-                    productoToSave = producto;
+                    } else {
+                        productoToSave = producto;
+                    }
+                    producto.sucursal = sucursal;
+                    productoToSave.save();
+                    if(++i % 1000 == 0) { Producto.em().flush(); Producto.em().clear(); }
+
                 }
-                producto.sucursal = sucursal;
-                productoToSave.save();
-                if(++i % 1000 == 0) { Producto.em().flush(); Producto.em().clear(); }
-
+                Logger.info("Finalizo la carga de productos("+i+") de la sucursal: "+sucursal.nombre);
+                Producto.em().getTransaction().commit();
             }
-			Logger.info("Finalizo la carga de productos("+i+") de la sucursal: "+sucursal.nombre);
-            Producto.em().getTransaction().commit();
         }
 
         private void setVentas(EntityTransaction et, ClientMessage msg) {
