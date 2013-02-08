@@ -37,7 +37,9 @@ public class ClientController {
                     setVentas(et, msg);
                 }
                 if( msg.command == ClientMessage.Command.setProductos) {
-                    setProductos(et, msg);
+                    new Thread() { public void run() {
+                            setProductos(et, msg);
+                        } }.start();
                 }
                 if( msg.command == ClientMessage.Command.ping ) {
                     JSONObject pong = new JSONObject();
