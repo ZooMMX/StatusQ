@@ -94,6 +94,7 @@ public class ClientController {
                         productoToSave.codigo      = producto.codigo;
                         productoToSave.existencias = producto.existencias;
                         productoToSave.nombre      = producto.nombre;
+                        productoToSave.linea       = producto.linea;
                         productoToSave.utilidad    = producto.utilidad;
 
                     } else {

@@ -50,12 +50,13 @@ public class ClientMessage {
 
                 final Long       id          = productoJSON.getLong("id");
                 final String     nombre      = productoJSON.getString("descripcion");
+                final String     linea       = productoJSON.getString("linea");
                 final BigDecimal precio      = new BigDecimal(productoJSON.getString("precio"));
                 final BigDecimal costo       = new BigDecimal(productoJSON.getString("costo"));
                 final BigDecimal utilidad    = new BigDecimal(productoJSON.getString("utilidad"));
                 final BigDecimal existencias = new BigDecimal(productoJSON.getString("existencias"));
                 final String     codigo      = productoJSON.getString("codigo");
-                final Producto producto      = new Producto(nombre, precio, costo, utilidad, existencias, codigo);
+                final Producto producto      = new Producto(nombre, linea, precio, costo, utilidad, existencias, codigo);
 
                 producto.id = id;
                 producto.sucursalId = idSucursal;

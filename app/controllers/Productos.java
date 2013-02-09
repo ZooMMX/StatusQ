@@ -42,11 +42,12 @@ public class Productos extends Application {
                     "%"+dtp.search+"%"
                 );
 
-        String[][] pArray = new String[productos.size()][5];
+        String[][] pArray = new String[productos.size()][6];
 
         for(int i = 0; i < productos.size(); i++) {
             pArray[i][0] = productos.get(i).codigo;
             pArray[i][1] = productos.get(i).nombre;
+            pArray[i][2] = productos.get(i).linea;
             pArray[i][2] = productos.get(i).costo.toString();
             pArray[i][3] = productos.get(i).precio.toString();
             pArray[i][4] = productos.get(i).existencias.toString();

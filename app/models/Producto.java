@@ -35,6 +35,9 @@ public class Producto extends GenericModel{
 	@Column(name="nombre", length=255)
 	public String nombre;
 
+    @Column(name="linea", length = 255)
+    public String linea;
+
 	@Column(name="precio")
 	public BigDecimal precio;
 
@@ -45,8 +48,9 @@ public class Producto extends GenericModel{
     @ManyToOne
     public Sucursal sucursal;
 
-    public Producto(String nombre, BigDecimal precio, BigDecimal costo, BigDecimal utilidad, BigDecimal existencias, String codigo) {
+    public Producto(String nombre, String linea, BigDecimal precio, BigDecimal costo, BigDecimal utilidad, BigDecimal existencias, String codigo) {
         this.nombre      = nombre;
+        this.linea       = linea;
         this.precio      = precio;
         this.costo       = costo;
         this.utilidad    = utilidad;
