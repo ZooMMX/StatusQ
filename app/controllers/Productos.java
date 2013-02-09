@@ -48,9 +48,9 @@ public class Productos extends Application {
             pArray[i][0] = productos.get(i).codigo;
             pArray[i][1] = productos.get(i).nombre;
             pArray[i][2] = productos.get(i).linea;
-            pArray[i][2] = productos.get(i).costo.toString();
-            pArray[i][3] = productos.get(i).precio.toString();
-            pArray[i][4] = productos.get(i).existencias.toString();
+            pArray[i][3] = productos.get(i).costo.toString();
+            pArray[i][4] = productos.get(i).precio.toString();
+            pArray[i][5] = productos.get(i).existencias.toString();
         }
         HashMap<String, Object> pHash = new HashMap<String, Object>();
         pHash.put("aaData"              , pArray);
